@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slottlabyrint - NES Stil</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas" width="512" height="480"></canvas>
+
+        <!-- Huvudmeny -->
+        <div id="main-menu" class="screen">
+            <h1 class="nes-title">SLOTTLABYRINT</h1>
+            <div class="menu-options">
+                <button class="nes-button" data-difficulty="easy">LÄTT (5×5)</button>
+                <button class="nes-button" data-difficulty="medium">MEDEL (10×10)</button>
+                <button class="nes-button" data-difficulty="hard">SVÅR (15×15)</button>
+            </div>
+            <div class="controls-info">
+                <p>Piltangenter / Swipe för att röra dig</p>
+                <button id="sound-toggle" class="nes-button small">🔊 LJUD: PÅ</button>
+            </div>
+        </div>
+
+        <!-- Spelskärm -->
+        <div id="game-screen" class="screen hidden">
+            <div id="game-ui">
+                <div class="ui-bar">
+                    <span id="level-info">NIVÅ: LÄTT</span>
+                    <button id="pause-btn" class="nes-button small">PAUS</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Endscreen -->
+        <div id="end-screen" class="screen hidden">
+            <h2 class="nes-title">GRATTIS!</h2>
+            <p class="end-message">Du hittade ut ur slottet!</p>
+            <div class="end-buttons">
+                <button id="play-again" class="nes-button">SPELA IGEN</button>
+                <button id="main-menu-btn" class="nes-button">HUVUDMENY</button>
+            </div>
+        </div>
+
+        <!-- Pausmeny -->
+        <div id="pause-menu" class="screen hidden">
+            <h3 class="nes-title">PAUSAD</h3>
+            <div class="pause-options">
+                <button id="resume-btn" class="nes-button">FORTSÄTT</button>
+                <button id="restart-btn" class="nes-button">BÖRJA OM</button>
+                <button id="quit-btn" class="nes-button">AVSLUTA</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

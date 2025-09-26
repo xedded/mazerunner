@@ -1,0 +1,33 @@
+{
+  "name": "mazerunner",
+  "version": "1.0.0",
+  "description": "NES-stil labyrintspel i webbläsaren",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 8000",
+    "build": "echo 'No build process needed for static site'",
+    "start": "python -m http.server 8000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/[username]/mazerunner.git"
+  },
+  "keywords": [
+    "game",
+    "maze",
+    "nes",
+    "retro",
+    "javascript",
+    "canvas",
+    "browser-game"
+  ],
+  "author": "Din Namn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/[username]/mazerunner/issues"
+  },
+  "homepage": "https://github.com/[username]/mazerunner#readme",
+  "engines": {
+    "node": ">=12.0.0"
+  }
+}
