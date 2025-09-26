@@ -221,6 +221,7 @@ class MazeRunner {
         if (this.gameState === 'playing') {
             this.updatePlayer(timestamp);
             this.renderCurrentRoom();
+            this.renderTorchLight();
             this.renderPlayer();
 
             if (this.transition.active) {
@@ -237,80 +238,139 @@ class MazeRunner {
         const centerY = this.canvas.height / 2;
         const roomPixelSize = this.roomSize * this.cellSize;
 
-        // Rita bakgrund (stenig golv)
-        this.ctx.fillStyle = '#404040';
+        // Rita bakgrund (stenig golv) - ljusare för bättre synlighet
+        this.ctx.fillStyle = '#606060';
         this.ctx.fillRect(centerX - roomPixelSize/2, centerY - roomPixelSize/2, roomPixelSize, roomPixelSize);
 
         // Lägg till textur på golvet
-        this.ctx.fillStyle = '#505050';
+        this.ctx.fillStyle = '#707070';
         for (let i = 0; i < 20; i++) {
             const x = centerX - roomPixelSize/2 + Math.random() * roomPixelSize;
             const y = centerY - roomPixelSize/2 + Math.random() * roomPixelSize;
             this.ctx.fillRect(x, y, 2, 2);
         }
 
-        // Rita väggar
-        this.ctx.fillStyle = '#303030';
+        // Rita väggar - mycket ljusare för tydlig synlighet
+        this.ctx.fillStyle = '#8B7355';
         const wallThickness = 20;
 
         if (room.walls.top) {
             this.ctx.fillRect(centerX - roomPixelSize/2, centerY - roomPixelSize/2, roomPixelSize, wallThickness);
+            // Lägg till kantdetaljer
+            this.ctx.fillStyle = '#A0895F';
+            this.ctx.fillRect(centerX - roomPixelSize/2, centerY - roomPixelSize/2, roomPixelSize, 4);
+            this.ctx.fillStyle = '#8B7355';
         }
         if (room.walls.right) {
             this.ctx.fillRect(centerX + roomPixelSize/2 - wallThickness, centerY - roomPixelSize/2, wallThickness, roomPixelSize);
+            this.ctx.fillStyle = '#A0895F';
+            this.ctx.fillRect(centerX + roomPixelSize/2 - wallThickness, centerY - roomPixelSize/2, 4, roomPixelSize);
+            this.ctx.fillStyle = '#8B7355';
         }
         if (room.walls.bottom) {
             this.ctx.fillRect(centerX - roomPixelSize/2, centerY + roomPixelSize/2 - wallThickness, roomPixelSize, wallThickness);
+            this.ctx.fillStyle = '#A0895F';
+            this.ctx.fillRect(centerX - roomPixelSize/2, centerY + roomPixelSize/2 - 4, roomPixelSize, 4);
+            this.ctx.fillStyle = '#8B7355';
         }
         if (room.walls.left) {
             this.ctx.fillRect(centerX - roomPixelSize/2, centerY - roomPixelSize/2, wallThickness, roomPixelSize);
+            this.ctx.fillStyle = '#A0895F';
+            this.ctx.fillRect(centerX - roomPixelSize/2, centerY - roomPixelSize/2, 4, roomPixelSize);
+            this.ctx.fillStyle = '#8B7355';
         }
 
-        // Rita dörröppningar som mörka passager
+        // Rita dörröppningar som mörka men synliga passager
         const doorWidth = 60;
-        this.ctx.fillStyle = '#1a1a1a';
+        this.ctx.fillStyle = '#2F2F2F';
 
         if (!room.walls.top) {
             this.ctx.fillRect(centerX - doorWidth/2, centerY - roomPixelSize/2, doorWidth, wallThickness);
+            // Markera dörröppning med ljusare kanter
+            this.ctx.fillStyle = '#4F4F4F';
+            this.ctx.fillRect(centerX - doorWidth/2, centerY - roomPixelSize/2, 3, wallThickness);
+            this.ctx.fillRect(centerX + doorWidth/2 - 3, centerY - roomPixelSize/2, 3, wallThickness);
         }
         if (!room.walls.right) {
+            this.ctx.fillStyle = '#2F2F2F';
             this.ctx.fillRect(centerX + roomPixelSize/2 - wallThickness, centerY - doorWidth/2, wallThickness, doorWidth);
+            this.ctx.fillStyle = '#4F4F4F';
+            this.ctx.fillRect(centerX + roomPixelSize/2 - wallThickness, centerY - doorWidth/2, wallThickness, 3);
+            this.ctx.fillRect(centerX + roomPixelSize/2 - wallThickness, centerY + doorWidth/2 - 3, wallThickness, 3);
         }
         if (!room.walls.bottom) {
+            this.ctx.fillStyle = '#2F2F2F';
             this.ctx.fillRect(centerX - doorWidth/2, centerY + roomPixelSize/2 - wallThickness, doorWidth, wallThickness);
+            this.ctx.fillStyle = '#4F4F4F';
+            this.ctx.fillRect(centerX - doorWidth/2, centerY + roomPixelSize/2 - wallThickness, 3, wallThickness);
+            this.ctx.fillRect(centerX + doorWidth/2 - 3, centerY + roomPixelSize/2 - wallThickness, 3, wallThickness);
         }
         if (!room.walls.left) {
+            this.ctx.fillStyle = '#2F2F2F';
             this.ctx.fillRect(centerX - roomPixelSize/2, centerY - doorWidth/2, wallThickness, doorWidth);
+            this.ctx.fillStyle = '#4F4F4F';
+            this.ctx.fillRect(centerX - roomPixelSize/2, centerY - doorWidth/2, wallThickness, 3);
+            this.ctx.fillRect(centerX - roomPixelSize/2, centerY + doorWidth/2 - 3, wallThickness, 3);
         }
 
-        // Markera slutrum
+        // Markera slutrum med tydlig gul markering
         if (room.isEnd) {
-            this.ctx.fillStyle = '#ffff00';
-            this.ctx.fillRect(centerX - 30, centerY - 30, 60, 60);
+            this.ctx.fillStyle = '#FFD700';
+            this.ctx.fillRect(centerX - 35, centerY - 35, 70, 70);
+
+            // Lägg till ram runt utgången
+            this.ctx.fillStyle = '#FF8C00';
+            this.ctx.fillRect(centerX - 35, centerY - 35, 70, 5);
+            this.ctx.fillRect(centerX - 35, centerY + 30, 70, 5);
+            this.ctx.fillRect(centerX - 35, centerY - 35, 5, 70);
+            this.ctx.fillRect(centerX + 30, centerY - 35, 5, 70);
 
             this.ctx.fillStyle = '#000000';
-            this.ctx.font = 'bold 12px monospace';
+            this.ctx.font = 'bold 14px monospace';
             this.ctx.textAlign = 'center';
             this.ctx.fillText('UTGÅNG', centerX, centerY + 5);
         }
+    }
+
+    renderTorchLight() {
+        const centerX = this.canvas.width / 2;
+        const centerY = this.canvas.height / 2;
+
+        // Räkna ut facklans flimmer
+        this.player.torchFlicker += 0.3;
+        const torchIntensity = 0.9 + Math.sin(this.player.torchFlicker) * 0.1;
+
+        // Rita större och ljusare fackelskene
+        const outerGradient = this.ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 200);
+        outerGradient.addColorStop(0, `rgba(255, 220, 150, ${torchIntensity * 0.8})`);
+        outerGradient.addColorStop(0.3, `rgba(255, 180, 100, ${torchIntensity * 0.6})`);
+        outerGradient.addColorStop(0.6, `rgba(255, 140, 70, ${torchIntensity * 0.3})`);
+        outerGradient.addColorStop(0.8, `rgba(200, 100, 50, ${torchIntensity * 0.1})`);
+        outerGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+        this.ctx.globalCompositeOperation = 'screen';
+        this.ctx.fillStyle = outerGradient;
+        this.ctx.fillRect(centerX - 200, centerY - 200, 400, 400);
+
+        // Lägg till en inre, intensivare ljuskägla
+        const innerGradient = this.ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 120);
+        innerGradient.addColorStop(0, `rgba(255, 240, 200, ${torchIntensity * 0.9})`);
+        innerGradient.addColorStop(0.5, `rgba(255, 200, 120, ${torchIntensity * 0.5})`);
+        innerGradient.addColorStop(0.8, `rgba(255, 160, 80, ${torchIntensity * 0.2})`);
+        innerGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+        this.ctx.fillStyle = innerGradient;
+        this.ctx.fillRect(centerX - 120, centerY - 120, 240, 240);
+
+        this.ctx.globalCompositeOperation = 'source-over';
     }
 
     renderPlayer() {
         const centerX = this.canvas.width / 2;
         const centerY = this.canvas.height / 2;
 
-        // Räkna ut facklans flimmer
-        this.player.torchFlicker += 0.3;
-        const torchIntensity = 0.8 + Math.sin(this.player.torchFlicker) * 0.2;
-
-        // Rita fackelskenet (glöd runt spelaren)
-        const gradient = this.ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 100);
-        gradient.addColorStop(0, `rgba(255, 200, 100, ${torchIntensity * 0.3})`);
-        gradient.addColorStop(0.5, `rgba(255, 150, 50, ${torchIntensity * 0.1})`);
-        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-
-        this.ctx.fillStyle = gradient;
-        this.ctx.fillRect(centerX - 100, centerY - 100, 200, 200);
+        // Räkna ut facklans flimmer för lågan
+        const torchIntensity = 0.9 + Math.sin(this.player.torchFlicker) * 0.1;
 
         // Rita spelaren som en enkel pixel-karaktär
         this.ctx.fillStyle = '#ff6b47';
