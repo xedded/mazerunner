@@ -238,77 +238,77 @@ class MazeRunner {
         const centerY = this.canvas.height / 2;
         const roomPixelSize = this.roomSize * this.cellSize;
 
-        // Rita bakgrund (stenig golv) - ljusare för bättre synlighet
-        this.ctx.fillStyle = '#606060';
+        // Rita bakgrund (stenig golv) - mycket ljusare
+        this.ctx.fillStyle = '#A0A0A0';
         this.ctx.fillRect(centerX - roomPixelSize/2, centerY - roomPixelSize/2, roomPixelSize, roomPixelSize);
 
         // Lägg till textur på golvet
-        this.ctx.fillStyle = '#707070';
+        this.ctx.fillStyle = '#B0B0B0';
         for (let i = 0; i < 20; i++) {
             const x = centerX - roomPixelSize/2 + Math.random() * roomPixelSize;
             const y = centerY - roomPixelSize/2 + Math.random() * roomPixelSize;
             this.ctx.fillRect(x, y, 2, 2);
         }
 
-        // Rita väggar - mycket ljusare för tydlig synlighet
-        this.ctx.fillStyle = '#8B7355';
+        // Rita väggar - kraftigt ljusare för tydlig synlighet
+        this.ctx.fillStyle = '#D2B48C';
         const wallThickness = 20;
 
         if (room.walls.top) {
             this.ctx.fillRect(centerX - roomPixelSize/2, centerY - roomPixelSize/2, roomPixelSize, wallThickness);
             // Lägg till kantdetaljer
-            this.ctx.fillStyle = '#A0895F';
+            this.ctx.fillStyle = '#F4E4BC';
             this.ctx.fillRect(centerX - roomPixelSize/2, centerY - roomPixelSize/2, roomPixelSize, 4);
-            this.ctx.fillStyle = '#8B7355';
+            this.ctx.fillStyle = '#D2B48C';
         }
         if (room.walls.right) {
             this.ctx.fillRect(centerX + roomPixelSize/2 - wallThickness, centerY - roomPixelSize/2, wallThickness, roomPixelSize);
-            this.ctx.fillStyle = '#A0895F';
+            this.ctx.fillStyle = '#F4E4BC';
             this.ctx.fillRect(centerX + roomPixelSize/2 - wallThickness, centerY - roomPixelSize/2, 4, roomPixelSize);
-            this.ctx.fillStyle = '#8B7355';
+            this.ctx.fillStyle = '#D2B48C';
         }
         if (room.walls.bottom) {
             this.ctx.fillRect(centerX - roomPixelSize/2, centerY + roomPixelSize/2 - wallThickness, roomPixelSize, wallThickness);
-            this.ctx.fillStyle = '#A0895F';
+            this.ctx.fillStyle = '#F4E4BC';
             this.ctx.fillRect(centerX - roomPixelSize/2, centerY + roomPixelSize/2 - 4, roomPixelSize, 4);
-            this.ctx.fillStyle = '#8B7355';
+            this.ctx.fillStyle = '#D2B48C';
         }
         if (room.walls.left) {
             this.ctx.fillRect(centerX - roomPixelSize/2, centerY - roomPixelSize/2, wallThickness, roomPixelSize);
-            this.ctx.fillStyle = '#A0895F';
+            this.ctx.fillStyle = '#F4E4BC';
             this.ctx.fillRect(centerX - roomPixelSize/2, centerY - roomPixelSize/2, 4, roomPixelSize);
-            this.ctx.fillStyle = '#8B7355';
+            this.ctx.fillStyle = '#D2B48C';
         }
 
-        // Rita dörröppningar som mörka men synliga passager
+        // Rita dörröppningar som tydligt synliga passager
         const doorWidth = 60;
-        this.ctx.fillStyle = '#2F2F2F';
+        this.ctx.fillStyle = '#505050';
 
         if (!room.walls.top) {
             this.ctx.fillRect(centerX - doorWidth/2, centerY - roomPixelSize/2, doorWidth, wallThickness);
             // Markera dörröppning med ljusare kanter
-            this.ctx.fillStyle = '#4F4F4F';
+            this.ctx.fillStyle = '#808080';
             this.ctx.fillRect(centerX - doorWidth/2, centerY - roomPixelSize/2, 3, wallThickness);
             this.ctx.fillRect(centerX + doorWidth/2 - 3, centerY - roomPixelSize/2, 3, wallThickness);
         }
         if (!room.walls.right) {
-            this.ctx.fillStyle = '#2F2F2F';
+            this.ctx.fillStyle = '#505050';
             this.ctx.fillRect(centerX + roomPixelSize/2 - wallThickness, centerY - doorWidth/2, wallThickness, doorWidth);
-            this.ctx.fillStyle = '#4F4F4F';
+            this.ctx.fillStyle = '#808080';
             this.ctx.fillRect(centerX + roomPixelSize/2 - wallThickness, centerY - doorWidth/2, wallThickness, 3);
             this.ctx.fillRect(centerX + roomPixelSize/2 - wallThickness, centerY + doorWidth/2 - 3, wallThickness, 3);
         }
         if (!room.walls.bottom) {
-            this.ctx.fillStyle = '#2F2F2F';
+            this.ctx.fillStyle = '#505050';
             this.ctx.fillRect(centerX - doorWidth/2, centerY + roomPixelSize/2 - wallThickness, doorWidth, wallThickness);
-            this.ctx.fillStyle = '#4F4F4F';
+            this.ctx.fillStyle = '#808080';
             this.ctx.fillRect(centerX - doorWidth/2, centerY + roomPixelSize/2 - wallThickness, 3, wallThickness);
             this.ctx.fillRect(centerX + doorWidth/2 - 3, centerY + roomPixelSize/2 - wallThickness, 3, wallThickness);
         }
         if (!room.walls.left) {
-            this.ctx.fillStyle = '#2F2F2F';
+            this.ctx.fillStyle = '#505050';
             this.ctx.fillRect(centerX - roomPixelSize/2, centerY - doorWidth/2, wallThickness, doorWidth);
-            this.ctx.fillStyle = '#4F4F4F';
+            this.ctx.fillStyle = '#808080';
             this.ctx.fillRect(centerX - roomPixelSize/2, centerY - doorWidth/2, wallThickness, 3);
             this.ctx.fillRect(centerX - roomPixelSize/2, centerY + doorWidth/2 - 3, wallThickness, 3);
         }
@@ -340,27 +340,30 @@ class MazeRunner {
         this.player.torchFlicker += 0.3;
         const torchIntensity = 0.9 + Math.sin(this.player.torchFlicker) * 0.1;
 
-        // Rita större och ljusare fackelskene
-        const outerGradient = this.ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 200);
-        outerGradient.addColorStop(0, `rgba(255, 220, 150, ${torchIntensity * 0.8})`);
-        outerGradient.addColorStop(0.3, `rgba(255, 180, 100, ${torchIntensity * 0.6})`);
-        outerGradient.addColorStop(0.6, `rgba(255, 140, 70, ${torchIntensity * 0.3})`);
-        outerGradient.addColorStop(0.8, `rgba(200, 100, 50, ${torchIntensity * 0.1})`);
-        outerGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        // Rita kraftigt förstärkt fackelskene
+        const outerGradient = this.ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 250);
+        outerGradient.addColorStop(0, `rgba(255, 240, 200, 1)`);
+        outerGradient.addColorStop(0.2, `rgba(255, 220, 150, 0.9)`);
+        outerGradient.addColorStop(0.4, `rgba(255, 180, 100, 0.7)`);
+        outerGradient.addColorStop(0.6, `rgba(255, 140, 70, 0.5)`);
+        outerGradient.addColorStop(0.8, `rgba(200, 100, 50, 0.3)`);
+        outerGradient.addColorStop(1, 'rgba(100, 50, 25, 0)');
 
-        this.ctx.globalCompositeOperation = 'screen';
+        this.ctx.globalCompositeOperation = 'multiply';
         this.ctx.fillStyle = outerGradient;
-        this.ctx.fillRect(centerX - 200, centerY - 200, 400, 400);
+        this.ctx.fillRect(centerX - 250, centerY - 250, 500, 500);
 
-        // Lägg till en inre, intensivare ljuskägla
-        const innerGradient = this.ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 120);
-        innerGradient.addColorStop(0, `rgba(255, 240, 200, ${torchIntensity * 0.9})`);
-        innerGradient.addColorStop(0.5, `rgba(255, 200, 120, ${torchIntensity * 0.5})`);
-        innerGradient.addColorStop(0.8, `rgba(255, 160, 80, ${torchIntensity * 0.2})`);
+        // Lägg till en inre, mycket intensivare ljuskägla
+        const innerGradient = this.ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 150);
+        innerGradient.addColorStop(0, `rgba(255, 255, 255, 0.8)`);
+        innerGradient.addColorStop(0.3, `rgba(255, 240, 200, 0.6)`);
+        innerGradient.addColorStop(0.6, `rgba(255, 200, 120, 0.4)`);
+        innerGradient.addColorStop(0.8, `rgba(255, 160, 80, 0.2)`);
         innerGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
+        this.ctx.globalCompositeOperation = 'screen';
         this.ctx.fillStyle = innerGradient;
-        this.ctx.fillRect(centerX - 120, centerY - 120, 240, 240);
+        this.ctx.fillRect(centerX - 150, centerY - 150, 300, 300);
 
         this.ctx.globalCompositeOperation = 'source-over';
     }
