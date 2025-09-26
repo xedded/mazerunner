@@ -216,12 +216,13 @@ class MazeRunner {
 
     // Rendering
     render(timestamp) {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        // Rensa med ljusgrå bakgrund istället för svart
+        this.ctx.fillStyle = '#E0E0E0';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         if (this.gameState === 'playing') {
             this.updatePlayer(timestamp);
             this.renderCurrentRoom();
-            this.renderTorchLight();
             this.renderPlayer();
 
             if (this.transition.active) {
@@ -238,77 +239,77 @@ class MazeRunner {
         const centerY = this.canvas.height / 2;
         const roomPixelSize = this.roomSize * this.cellSize;
 
-        // Rita bakgrund (stenig golv) - mycket ljusare
-        this.ctx.fillStyle = '#A0A0A0';
+        // Rita bakgrund (stenig golv) - mycket ljus beige
+        this.ctx.fillStyle = '#F5F5DC';
         this.ctx.fillRect(centerX - roomPixelSize/2, centerY - roomPixelSize/2, roomPixelSize, roomPixelSize);
 
         // Lägg till textur på golvet
-        this.ctx.fillStyle = '#B0B0B0';
+        this.ctx.fillStyle = '#E6E6FA';
         for (let i = 0; i < 20; i++) {
             const x = centerX - roomPixelSize/2 + Math.random() * roomPixelSize;
             const y = centerY - roomPixelSize/2 + Math.random() * roomPixelSize;
             this.ctx.fillRect(x, y, 2, 2);
         }
 
-        // Rita väggar - kraftigt ljusare för tydlig synlighet
-        this.ctx.fillStyle = '#D2B48C';
+        // Rita väggar - mörka för stark kontrast
+        this.ctx.fillStyle = '#8B4513';
         const wallThickness = 20;
 
         if (room.walls.top) {
             this.ctx.fillRect(centerX - roomPixelSize/2, centerY - roomPixelSize/2, roomPixelSize, wallThickness);
             // Lägg till kantdetaljer
-            this.ctx.fillStyle = '#F4E4BC';
+            this.ctx.fillStyle = '#D2691E';
             this.ctx.fillRect(centerX - roomPixelSize/2, centerY - roomPixelSize/2, roomPixelSize, 4);
-            this.ctx.fillStyle = '#D2B48C';
+            this.ctx.fillStyle = '#8B4513';
         }
         if (room.walls.right) {
             this.ctx.fillRect(centerX + roomPixelSize/2 - wallThickness, centerY - roomPixelSize/2, wallThickness, roomPixelSize);
-            this.ctx.fillStyle = '#F4E4BC';
+            this.ctx.fillStyle = '#D2691E';
             this.ctx.fillRect(centerX + roomPixelSize/2 - wallThickness, centerY - roomPixelSize/2, 4, roomPixelSize);
-            this.ctx.fillStyle = '#D2B48C';
+            this.ctx.fillStyle = '#8B4513';
         }
         if (room.walls.bottom) {
             this.ctx.fillRect(centerX - roomPixelSize/2, centerY + roomPixelSize/2 - wallThickness, roomPixelSize, wallThickness);
-            this.ctx.fillStyle = '#F4E4BC';
+            this.ctx.fillStyle = '#D2691E';
             this.ctx.fillRect(centerX - roomPixelSize/2, centerY + roomPixelSize/2 - 4, roomPixelSize, 4);
-            this.ctx.fillStyle = '#D2B48C';
+            this.ctx.fillStyle = '#8B4513';
         }
         if (room.walls.left) {
             this.ctx.fillRect(centerX - roomPixelSize/2, centerY - roomPixelSize/2, wallThickness, roomPixelSize);
-            this.ctx.fillStyle = '#F4E4BC';
+            this.ctx.fillStyle = '#D2691E';
             this.ctx.fillRect(centerX - roomPixelSize/2, centerY - roomPixelSize/2, 4, roomPixelSize);
-            this.ctx.fillStyle = '#D2B48C';
+            this.ctx.fillStyle = '#8B4513';
         }
 
-        // Rita dörröppningar som tydligt synliga passager
+        // Rita dörröppningar som mycket tydliga passager
         const doorWidth = 60;
-        this.ctx.fillStyle = '#505050';
+        this.ctx.fillStyle = '#228B22';
 
         if (!room.walls.top) {
             this.ctx.fillRect(centerX - doorWidth/2, centerY - roomPixelSize/2, doorWidth, wallThickness);
             // Markera dörröppning med ljusare kanter
-            this.ctx.fillStyle = '#808080';
+            this.ctx.fillStyle = '#32CD32';
             this.ctx.fillRect(centerX - doorWidth/2, centerY - roomPixelSize/2, 3, wallThickness);
             this.ctx.fillRect(centerX + doorWidth/2 - 3, centerY - roomPixelSize/2, 3, wallThickness);
         }
         if (!room.walls.right) {
             this.ctx.fillStyle = '#505050';
             this.ctx.fillRect(centerX + roomPixelSize/2 - wallThickness, centerY - doorWidth/2, wallThickness, doorWidth);
-            this.ctx.fillStyle = '#808080';
+            this.ctx.fillStyle = '#32CD32';
             this.ctx.fillRect(centerX + roomPixelSize/2 - wallThickness, centerY - doorWidth/2, wallThickness, 3);
             this.ctx.fillRect(centerX + roomPixelSize/2 - wallThickness, centerY + doorWidth/2 - 3, wallThickness, 3);
         }
         if (!room.walls.bottom) {
             this.ctx.fillStyle = '#505050';
             this.ctx.fillRect(centerX - doorWidth/2, centerY + roomPixelSize/2 - wallThickness, doorWidth, wallThickness);
-            this.ctx.fillStyle = '#808080';
+            this.ctx.fillStyle = '#32CD32';
             this.ctx.fillRect(centerX - doorWidth/2, centerY + roomPixelSize/2 - wallThickness, 3, wallThickness);
             this.ctx.fillRect(centerX + doorWidth/2 - 3, centerY + roomPixelSize/2 - wallThickness, 3, wallThickness);
         }
         if (!room.walls.left) {
             this.ctx.fillStyle = '#505050';
             this.ctx.fillRect(centerX - roomPixelSize/2, centerY - doorWidth/2, wallThickness, doorWidth);
-            this.ctx.fillStyle = '#808080';
+            this.ctx.fillStyle = '#32CD32';
             this.ctx.fillRect(centerX - roomPixelSize/2, centerY - doorWidth/2, wallThickness, 3);
             this.ctx.fillRect(centerX - roomPixelSize/2, centerY + doorWidth/2 - 3, wallThickness, 3);
         }
@@ -332,41 +333,6 @@ class MazeRunner {
         }
     }
 
-    renderTorchLight() {
-        const centerX = this.canvas.width / 2;
-        const centerY = this.canvas.height / 2;
-
-        // Räkna ut facklans flimmer
-        this.player.torchFlicker += 0.3;
-        const torchIntensity = 0.9 + Math.sin(this.player.torchFlicker) * 0.1;
-
-        // Rita kraftigt förstärkt fackelskene
-        const outerGradient = this.ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 250);
-        outerGradient.addColorStop(0, `rgba(255, 240, 200, 1)`);
-        outerGradient.addColorStop(0.2, `rgba(255, 220, 150, 0.9)`);
-        outerGradient.addColorStop(0.4, `rgba(255, 180, 100, 0.7)`);
-        outerGradient.addColorStop(0.6, `rgba(255, 140, 70, 0.5)`);
-        outerGradient.addColorStop(0.8, `rgba(200, 100, 50, 0.3)`);
-        outerGradient.addColorStop(1, 'rgba(100, 50, 25, 0)');
-
-        this.ctx.globalCompositeOperation = 'multiply';
-        this.ctx.fillStyle = outerGradient;
-        this.ctx.fillRect(centerX - 250, centerY - 250, 500, 500);
-
-        // Lägg till en inre, mycket intensivare ljuskägla
-        const innerGradient = this.ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 150);
-        innerGradient.addColorStop(0, `rgba(255, 255, 255, 0.8)`);
-        innerGradient.addColorStop(0.3, `rgba(255, 240, 200, 0.6)`);
-        innerGradient.addColorStop(0.6, `rgba(255, 200, 120, 0.4)`);
-        innerGradient.addColorStop(0.8, `rgba(255, 160, 80, 0.2)`);
-        innerGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-
-        this.ctx.globalCompositeOperation = 'screen';
-        this.ctx.fillStyle = innerGradient;
-        this.ctx.fillRect(centerX - 150, centerY - 150, 300, 300);
-
-        this.ctx.globalCompositeOperation = 'source-over';
-    }
 
     renderPlayer() {
         const centerX = this.canvas.width / 2;
@@ -375,24 +341,29 @@ class MazeRunner {
         // Räkna ut facklans flimmer för lågan
         const torchIntensity = 0.9 + Math.sin(this.player.torchFlicker) * 0.1;
 
-        // Rita spelaren som en enkel pixel-karaktär
-        this.ctx.fillStyle = '#ff6b47';
-        this.ctx.fillRect(centerX - 8, centerY - 12, 16, 20);
+        // Rita spelaren som en mycket synlig karaktär
+        this.ctx.fillStyle = '#FF0000'; // Stark röd kropp
+        this.ctx.fillRect(centerX - 12, centerY - 15, 24, 30);
 
         // Rita huvud
-        this.ctx.fillStyle = '#ffdbac';
-        this.ctx.fillRect(centerX - 6, centerY - 18, 12, 8);
+        this.ctx.fillStyle = '#FFB6C1'; // Ljusrosa huvud
+        this.ctx.fillRect(centerX - 10, centerY - 25, 20, 15);
 
         // Rita facklan
-        const torchX = centerX + (this.player.direction === 1 ? 12 : this.player.direction === 3 ? -12 : 0);
-        const torchY = centerY - 8;
+        const torchX = centerX + (this.player.direction === 1 ? 15 : this.player.direction === 3 ? -15 : 0);
+        const torchY = centerY - 10;
 
-        this.ctx.fillStyle = '#8B4513';
-        this.ctx.fillRect(torchX - 2, torchY - 6, 4, 12);
+        this.ctx.fillStyle = '#8B4513'; // Brun pinne
+        this.ctx.fillRect(torchX - 3, torchY - 8, 6, 16);
 
         // Rita lågan
-        this.ctx.fillStyle = `rgba(255, ${100 + torchIntensity * 100}, 0, ${torchIntensity})`;
-        this.ctx.fillRect(torchX - 3, torchY - 12, 6, 8);
+        this.ctx.fillStyle = '#FF4500'; // Orange låga
+        this.ctx.fillRect(torchX - 5, torchY - 18, 10, 12);
+
+        // Rita ögon
+        this.ctx.fillStyle = '#000000';
+        this.ctx.fillRect(centerX - 6, centerY - 22, 3, 3);
+        this.ctx.fillRect(centerX + 3, centerY - 22, 3, 3);
     }
 
     updatePlayer(timestamp) {
